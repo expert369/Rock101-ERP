@@ -83,7 +83,7 @@ app_license = "mit"
 # ------------
 
 # before_install = "rock101_erp.install.before_install"
-# after_install = "rock101_erp.install.after_install"
+after_install = "rock101_erp.install.after_install"
 
 # Uninstallation
 # ------------
@@ -129,21 +129,26 @@ app_license = "mit"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Project Material Planning": "rock101_erp.rock101_erp.doctype.project_material_planning.project_material_planning.ProjectMaterialPlanning",
+}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Purchase Order": {
+		# "validate": "rock101_erp.controllers.material_planning.validate_purchase_order",
+		"on_submit": "rock101_erp.controllers.material_planning.on_purchase_order_submit",
+		"on_cancel": "rock101_erp.controllers.material_planning.on_purchase_order_cancel",
+	},
+	"Purchase Receipt": {
+		"validate": "rock101_erp.controllers.material_planning.resolve_purchase_receipt_planning",
+		"on_submit": "rock101_erp.controllers.material_planning.on_purchase_receipt_submit",
+		"on_cancel": "rock101_erp.controllers.material_planning.on_purchase_receipt_cancel",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
@@ -166,10 +171,12 @@ app_license = "mit"
 # 	],
 # }
 
-# Testing
-# -------
-
-# before_tests = "rock101_erp.install.before_tests"
+# include js in doctype views
+doctype_js = {
+	"Purchase Order": "public/js/purchase_order.js",
+	"Purchase Receipt": "public/js/purchase_receipt.js",
+	"Project Material Planning": "public/js/project_material_planning.js",
+}
 
 # Overriding Methods
 # ------------------------------
@@ -246,4 +253,3 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-

@@ -1,0 +1,275 @@
+{
+ "actions": [],
+ "autoname": "field:project_id",
+ "creation": "2026-08-06 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_project",
+  "project_id",
+  "project_name",
+  "project",
+  "column_break_1",
+  "date_started",
+  "date_finished",
+  "currency",
+  "section_break_progress",
+  "quantity_progress",
+  "cost_progress",
+  "project_progress",
+  "column_break_2",
+  "required_items",
+  "purchased_items",
+  "remaining_items",
+  "section_break_cost",
+"total_required_cost",
+   "total_purchased_cost",
+   "total_remaining_cost",
+    "section_break_items",
+  "items",
+  "section_break_orders",
+  "purchase_orders",
+  "section_break_history",
+  "purchase_history",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_project",
+   "fieldtype": "Section Break",
+   "label": "Project Details"
+  },
+  {
+   "fieldname": "project_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project Name"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_started",
+   "fieldtype": "Date",
+   "label": "Date Started"
+  },
+  {
+   "fieldname": "date_finished",
+   "fieldtype": "Date",
+   "label": "Expected Date Finished"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_progress",
+   "fieldtype": "Section Break",
+   "label": "Material Progress"
+  },
+  {
+   "fieldname": "quantity_progress",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Material Quantity Progress",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cost_progress",
+   "fieldtype": "Percent",
+   "label": "Material Cost Progress",
+   "read_only": 1
+  },
+  {
+   "fieldname": "project_progress",
+   "fieldtype": "Percent",
+   "label": "Project Progress",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "required_items",
+   "fieldtype": "Float",
+   "label": "Required Items",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchased_items",
+   "fieldtype": "Float",
+   "label": "Purchased Items",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remaining_items",
+   "fieldtype": "Float",
+   "label": "Remaining Items",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_cost",
+   "fieldtype": "Section Break",
+   "label": "Cost Summary"
+  },
+  {
+   "fieldname": "total_required_cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Required Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_purchased_cost",
+   "fieldtype": "Currency",
+   "label": "Total Purchased Cost",
+   "read_only": 1
+  },
+{
+   "fieldname": "total_remaining_cost",
+   "fieldtype": "Currency",
+   "label": "Remaining Cost",
+   "read_only": 1
+  },
+ {
+    "fieldname": "section_break_items",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Project Material Planning Item"
+  },
+  {
+   "fieldname": "section_break_orders",
+   "fieldtype": "Section Break",
+   "label": "Purchase Orders"
+  },
+  {
+   "fieldname": "purchase_orders",
+   "fieldtype": "Table",
+   "label": "Purchase Orders",
+   "options": "Project Material Planning Purchase Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_history",
+   "fieldtype": "Section Break",
+   "label": "Purchase History"
+  },
+  {
+   "fieldname": "purchase_history",
+   "fieldtype": "Table",
+   "label": "Purchase History",
+   "options": "Project Material Planning History",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Purchase Order",
+   "link_fieldname": "project_material_planning"
+  }
+ ],
+ "modified": "2026-08-06 13:28:14.545552",
+ "modified_by": "Administrator",
+ "module": "Rock101 Erp",
+ "name": "Project Material Planning",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Projects Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All"
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "project_name",
+ "track_changes": 1
+}
