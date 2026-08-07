@@ -20,8 +20,8 @@ frappe.ui.form.on("Project Material Planning", {
 					(d) => Math.max(d.remaining_qty - d.draft_po_qty, 0) > 0
 				);
 				const source = available.length ? available : planned;
-                console.log(source);
-                
+				console.log(source);
+
 				const data = source.map((d) => ({
 					item_code: d.item_code,
 					qty: Math.max(d.remaining_qty - d.draft_po_qty - d.submitted_qty, 0),

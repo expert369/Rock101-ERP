@@ -2,9 +2,13 @@ import json
 
 import frappe
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import flt, today
 
 PLANNING_ITEM_FIELD = "project_material_planning_item"
+
+WORKFLOW_NAME = "Project Material Planning Workflow"
+WORKFLOW_STATES = ["Draft", "In Progress", "Finished"]
+WORKFLOW_ACTIONS = ["Start", "Complete"]
 
 
 def get_po_aggregates(planning):
@@ -204,6 +208,19 @@ def recalculate_planning(doc):
 	doc.quantity_progress = flt(received_qty_sum / required_qty_sum * 100) if required_qty_sum else 0
 	doc.cost_progress = flt(total_received_cost / total_required_cost * 100) if total_required_cost else 0
 	doc.project_progress = flt(doc.quantity_progress)
+
+	sync_completion(doc)
+
+
+def sync_completion(doc):
+	"""At 100% project progress, stamp the actual finish date and auto-complete the
+	workflow (In Progress -> Finished). Called on every recalculation, including the
+	update-after-submit saves that follow Purchase Order / Purchase Receipt events."""
+	if flt(doc.project_progress) >= 100:
+		if not doc.get("actual_date_finished"):
+			doc.actual_date_finished = today()
+		if doc.get("workflow_state") == "In Progress":
+			doc.workflow_state = "Finished"
 
 
 def update_planning(planning_name):
@@ -447,3 +464,53 @@ def create_purchase_order(planning_name, supplier, schedule_date=None, items=Non
 
 	po.insert()
 	return po.name
+
+
+def ensure_planning_workflow():
+	"""Create the Project Material Planning workflow if it does not exist (idempotent).
+
+	States: Draft -> In Progress -> Finished. The In Progress -> Finished transition is also used by ``validate_workflow`` when the
+	document auto-completes at 100% progress.
+	"""
+	if frappe.db.exists("Workflow", WORKFLOW_NAME):
+		return
+
+	for state in WORKFLOW_STATES:
+		if not frappe.db.exists("Workflow State", state):
+			frappe.get_doc({"doctype": "Workflow State", "workflow_state_name": state}).insert(
+				ignore_permissions=True
+			)
+
+	for action in WORKFLOW_ACTIONS:
+		if not frappe.db.exists("Workflow Action Master", action):
+			frappe.get_doc({"doctype": "Workflow Action Master", "workflow_action_name": action}).insert(
+				ignore_permissions=True
+			)
+
+	workflow = frappe.get_doc(
+		{
+			"doctype": "Workflow",
+			"workflow_name": WORKFLOW_NAME,
+			"document_type": "Project Material Planning",
+			"workflow_state_field": "workflow_state",
+			"is_active": 1,
+			"send_email_alert": 0,
+			"states": [
+				{"state": "Draft", "doc_status": "0", "allow_edit": "All"},
+				{"state": "In Progress", "doc_status": "1", "allow_edit": "All"},
+				{"state": "Finished", "doc_status": "1", "allow_edit": "All"},
+			],
+			"transitions": [
+				{"state": "Draft", "action": "Start", "next_state": "In Progress", "allowed": "All"},
+				{
+					"state": "In Progress",
+					"action": "Complete",
+					"next_state": "Finished",
+					"allowed": "All",
+				},
+			],
+		}
+	).insert(ignore_permissions=True)
+
+	frappe.clear_cache(doctype="Project Material Planning")
+	return workflow

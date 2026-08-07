@@ -2,8 +2,11 @@ import frappe
 from erpnext.buying.doctype.supplier.test_supplier import create_supplier
 from erpnext.stock.doctype.item.test_item import make_item
 from erpnext.stock.doctype.warehouse.test_warehouse import create_warehouse
+from frappe.model.workflow import apply_workflow
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import flt
+
+from rock101_erp.controllers.material_planning import ensure_planning_workflow
 
 
 class TestProjectMaterialPlanning(FrappeTestCase):
@@ -17,6 +20,7 @@ class TestProjectMaterialPlanning(FrappeTestCase):
 		self.supplier = create_supplier(supplier_name=frappe.generate_hash(length=8))
 		self.cement = self.make_stock_item("Rock101 Cement")
 		self.steel = self.make_stock_item("Rock101 Steel Bar")
+		ensure_planning_workflow()
 
 	def tearDown(self):
 		frappe.db.rollback()
@@ -385,3 +389,50 @@ class TestProjectMaterialPlanning(FrappeTestCase):
 
 		frappe.delete_doc("Purchase Order", po.name, force=1)
 		frappe.delete_doc("Purchase Order", draft.name, force=1)
+
+	def test_workflow_default_state_is_draft(self):
+		planning = self.make_planning()
+		self.assertEqual(planning.workflow_state, "Draft")
+		self.assertEqual(planning.docstatus, 0)
+		self.assertIsNone(planning.actual_date_finished)
+
+	def test_workflow_start_moves_to_in_progress(self):
+		planning = self.make_planning()
+		apply_workflow(planning, "Start")
+		planning.reload()
+		self.assertEqual(planning.workflow_state, "In Progress")
+		self.assertEqual(planning.docstatus, 1)
+
+	def test_auto_finish_and_date_finished_at_100_percent(self):
+		planning = self.make_planning()
+		apply_workflow(planning, "Start")
+
+		po = self.make_purchase_order(planning, qty_items={self.cement: 10, self.steel: 20})
+		po.insert()
+		po.submit()
+
+		pr = self.make_purchase_receipt(planning, po, qty_items={self.cement: 10, self.steel: 20})
+		pr.insert()
+		pr.submit()
+
+		planning.reload()
+		self.assertEqual(flt(planning.project_progress), 100)
+		self.assertEqual(planning.workflow_state, "Finished")
+		self.assertEqual(planning.docstatus, 1)
+		self.assertEqual(str(planning.actual_date_finished), frappe.utils.today())
+
+	def test_no_finish_below_100_percent(self):
+		planning = self.make_planning()
+		apply_workflow(planning, "Start")
+
+		po = self.make_purchase_order(planning, qty_items={self.cement: 5, self.steel: 10})
+		po.insert()
+		po.submit()
+
+		pr = self.make_purchase_receipt(planning, po, qty_items={self.cement: 5})
+		pr.insert()
+		pr.submit()
+
+		planning.reload()
+		self.assertEqual(planning.workflow_state, "In Progress")
+		self.assertIsNone(planning.actual_date_finished)

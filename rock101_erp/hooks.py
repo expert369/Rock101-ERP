@@ -139,7 +139,7 @@ override_doctype_class = {
 
 doc_events = {
 	"Purchase Order": {
-		# "validate": "rock101_erp.controllers.material_planning.validate_purchase_order",
+		"validate": "rock101_erp.controllers.material_planning.validate_purchase_order",
 		"on_submit": "rock101_erp.controllers.material_planning.on_purchase_order_submit",
 		"on_cancel": "rock101_erp.controllers.material_planning.on_purchase_order_cancel",
 	},
@@ -256,3 +256,5 @@ doctype_calendar_js = {
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+
+fixtures = ["Workflow", "Workflow State", "Workflow Action Master"]

@@ -6,3 +6,4 @@
 # Patches added in this section will be executed after doctypes are migrated
 
 rock101_erp.patches.v1_0_add_material_planning_custom_fields
+rock101_erp.patches.v1_1_add_material_planning_workflow

@@ -150,3 +150,27 @@ Create PO batch excess (without reason throws; with reason → reason lands on t
 - `rock101_erp/public/js/{purchase_order,purchase_receipt,project_material_planning}.js`
 - `rock101_erp/rock101_erp/doctype/{project_material_planning,project_material_planning_item,project_material_planning_history,project_material_planning_purchase_order}/` (json + py, incl. test file)
 - `README.md` (user guide + workflow diagram)
+
+## 9. Session 2 — Workflow + auto Date Finished (2026-08-07)
+
+- **Workflow "Project Material Planning Workflow"** (active) — states Draft(0) → In Progress(1) → Finished(1);
+  actions **Start** (Draft→In Progress, submits the doc) and **Complete** (In Progress→Finished, allowed="All",
+  also satisfies `validate_workflow` when the doc auto-completes). doc `is_submittable=1`; `workflow_state` Custom
+  Field (Link → Workflow State, allow_on_submit) created by the Workflow doctype itself.
+- **Created by** `ensure_planning_workflow()` (`controllers/material_planning.py`, idempotent): renders the 3
+  Workflow State + 2 Workflow Action Master records first, then the Workflow. Wired into `install.after_install`,
+  patch `rock101_erp.patches.v1_1_add_material_planning_workflow` (+`patches.txt`), and the test `setUp`.
+- **New field** `actual_date_finished` (Date, label "Date Finished", read_only, allow_on_submit) — kept existing
+  `date_finished` as "Expected Date Finished".
+- **Auto-complete logic** lives in `sync_completion(doc)` called at the end of `recalculate_planning` — NOT the
+  controller `validate()`: submitted plans are updated via PO/PR events (`update_planning` → `doc.save()`, which is
+  an `update_after_submit` action) and Frappe **does not run `validate()` on update-after-submit saves**; only
+  `before_update_after_submit`. At `project_progress >= 100`: set `actual_date_finished = today()` (once, no
+  clearing on later drops) and `workflow_state = "Finished"` if it was "In Progress".
+- **Update-after-submit unlocked**: `allow_on_submit=1` added to every recalc-owned field (3 progress %, 3 item
+  counts, 3 cost totals, `actual_date_finished`, both read-only tables) + the derived item-row fields and all
+  fields of the PO-log/history tables.
+- **Bug re-enabled**: `hooks.py` Purchase Order `validate` hook (server-side excess guard) was commented out —
+  re-enabled.
+- **Tests**: +4 (default state Draft; Start → In Progress + submittable; full receipt → auto Finished +
+  `actual_date_finished`; partial receipt stays In Progress). 16 tests pass, ruff clean.
