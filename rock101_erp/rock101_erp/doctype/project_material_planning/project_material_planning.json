@@ -22,10 +22,10 @@
   "purchased_items",
   "remaining_items",
   "section_break_cost",
-"total_required_cost",
-   "total_purchased_cost",
-   "total_remaining_cost",
-    "section_break_items",
+  "total_required_cost",
+  "total_purchased_cost",
+  "total_remaining_cost",
+  "section_break_items",
   "items",
   "section_break_orders",
   "purchase_orders",
@@ -45,6 +45,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Project ID",
+   "no_copy": 1,
    "reqd": 1,
    "unique": 1
   },
@@ -52,7 +53,8 @@
    "fieldname": "project_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Project Name"
+   "label": "Project Name",
+   "no_copy": 1
   },
   {
    "fieldname": "project",
@@ -72,7 +74,8 @@
   {
    "fieldname": "date_finished",
    "fieldtype": "Date",
-   "label": "Expected Date Finished"
+   "label": "Expected Date Finished",
+   "no_copy": 1
   },
   {
    "fieldname": "currency",
@@ -91,18 +94,21 @@
    "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Material Quantity Progress",
+   "no_copy": 1,
    "read_only": 1
   },
   {
    "fieldname": "cost_progress",
    "fieldtype": "Percent",
    "label": "Material Cost Progress",
+   "no_copy": 1,
    "read_only": 1
   },
   {
    "fieldname": "project_progress",
    "fieldtype": "Percent",
    "label": "Project Progress",
+   "no_copy": 1,
    "read_only": 1
   },
   {
@@ -113,18 +119,21 @@
    "fieldname": "required_items",
    "fieldtype": "Float",
    "label": "Required Items",
+   "no_copy": 1,
    "read_only": 1
   },
   {
    "fieldname": "purchased_items",
    "fieldtype": "Float",
    "label": "Purchased Items",
+   "no_copy": 1,
    "read_only": 1
   },
   {
    "fieldname": "remaining_items",
    "fieldtype": "Float",
    "label": "Remaining Items",
+   "no_copy": 1,
    "read_only": 1
   },
   {
@@ -137,22 +146,25 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Total Required Cost",
+   "no_copy": 1,
    "read_only": 1
   },
   {
    "fieldname": "total_purchased_cost",
    "fieldtype": "Currency",
    "label": "Total Purchased Cost",
+   "no_copy": 1,
    "read_only": 1
   },
-{
+  {
    "fieldname": "total_remaining_cost",
    "fieldtype": "Currency",
    "label": "Remaining Cost",
+   "no_copy": 1,
    "read_only": 1
   },
- {
-    "fieldname": "section_break_items",
+  {
+   "fieldname": "section_break_items",
    "fieldtype": "Section Break",
    "label": "Items"
   },
@@ -160,6 +172,7 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
+   "no_copy": 1,
    "options": "Project Material Planning Item"
   },
   {
@@ -171,6 +184,7 @@
    "fieldname": "purchase_orders",
    "fieldtype": "Table",
    "label": "Purchase Orders",
+   "no_copy": 1,
    "options": "Project Material Planning Purchase Order",
    "read_only": 1
   },
@@ -183,6 +197,7 @@
    "fieldname": "purchase_history",
    "fieldtype": "Table",
    "label": "Purchase History",
+   "no_copy": 1,
    "options": "Project Material Planning History",
    "read_only": 1
   },
@@ -194,7 +209,8 @@
   {
    "fieldname": "notes",
    "fieldtype": "Small Text",
-   "label": "Notes"
+   "label": "Notes",
+   "no_copy": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -204,7 +220,7 @@
    "link_fieldname": "project_material_planning"
   }
  ],
- "modified": "2026-08-06 13:28:14.545552",
+ "modified": "2026-08-07 10:12:25.522627",
  "modified_by": "Administrator",
  "module": "Rock101 Erp",
  "name": "Project Material Planning",

@@ -175,7 +175,10 @@ doc_events = {
 doctype_js = {
 	"Purchase Order": "public/js/purchase_order.js",
 	"Purchase Receipt": "public/js/purchase_receipt.js",
-	"Project Material Planning": "public/js/project_material_planning.js",
+}
+
+doctype_calendar_js = {
+	"Project Material Planning": "public/js/project_material_planning_calendar.js",
 }
 
 # Overriding Methods
